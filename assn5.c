@@ -8,22 +8,17 @@ struct Node {
     struct Node *next;
 };
 
-/* Insert a term in descending order of exponent */
 void insertTerm(struct Node **head, int coeff, int exp) {
     struct Node *newNode, *temp, *prev;
 
-    if (coeff == 0) {
+    if (coeff == 0)
         return;
-    }
 
-    /* Create the first node */
     if (*head == NULL) {
         newNode = (struct Node *)malloc(sizeof(struct Node));
 
-        if (newNode == NULL) {
-            printf("Memory allocation failed.\n");
+        if (newNode == NULL)
             exit(EXIT_FAILURE);
-        }
 
         newNode->coeff = coeff;
         newNode->exp = exp;
@@ -32,14 +27,12 @@ void insertTerm(struct Node **head, int coeff, int exp) {
         return;
     }
 
-    /* Check whether the exponent already exists */
     temp = *head;
 
     do {
         if (temp->exp == exp) {
             temp->coeff += coeff;
 
-            /* Remove the term if its coefficient becomes zero */
             if (temp->coeff == 0) {
                 if (temp->next == temp) {
                     *head = NULL;
@@ -49,15 +42,13 @@ void insertTerm(struct Node **head, int coeff, int exp) {
 
                 prev = temp->next;
 
-                while (prev->next != temp) {
+                while (prev->next != temp)
                     prev = prev->next;
-                }
 
                 prev->next = temp->next;
 
-                if (*head == temp) {
+                if (*head == temp)
                     *head = temp->next;
-                }
 
                 free(temp);
             }
@@ -68,23 +59,19 @@ void insertTerm(struct Node **head, int coeff, int exp) {
         temp = temp->next;
     } while (temp != *head);
 
-    /* Insert before the head if the exponent is largest */
     if (exp > (*head)->exp) {
         newNode = (struct Node *)malloc(sizeof(struct Node));
 
-        if (newNode == NULL) {
-            printf("Memory allocation failed.\n");
+        if (newNode == NULL)
             exit(EXIT_FAILURE);
-        }
 
         newNode->coeff = coeff;
         newNode->exp = exp;
 
         temp = *head;
 
-        while (temp->next != *head) {
+        while (temp->next != *head)
             temp = temp->next;
-        }
 
         newNode->next = *head;
         temp->next = newNode;
@@ -92,29 +79,22 @@ void insertTerm(struct Node **head, int coeff, int exp) {
         return;
     }
 
-    /* Find the correct position */
     temp = *head;
 
-    while (temp->next != *head &&
-           temp->next->exp > exp) {
+    while (temp->next != *head && temp->next->exp > exp)
         temp = temp->next;
-    }
 
     newNode = (struct Node *)malloc(sizeof(struct Node));
 
-    if (newNode == NULL) {
-        printf("Memory allocation failed.\n");
+    if (newNode == NULL)
         exit(EXIT_FAILURE);
-    }
 
     newNode->coeff = coeff;
     newNode->exp = exp;
-
     newNode->next = temp->next;
     temp->next = newNode;
 }
 
-/* Create a polynomial */
 struct Node *createPolynomial() {
     struct Node *head = NULL;
     int n, coeff, exp, i;
@@ -123,7 +103,7 @@ struct Node *createPolynomial() {
     scanf("%d", &n);
 
     if (n < 0) {
-        printf("Number of terms cannot be negative.\n");
+        printf("Invalid number of terms.\n");
         return NULL;
     }
 
@@ -132,7 +112,7 @@ struct Node *createPolynomial() {
         scanf("%d %d", &coeff, &exp);
 
         if (exp < 0) {
-            printf("Exponent must be non-negative. Try again.\n");
+            printf("Exponent must be non-negative.\n");
             i--;
             continue;
         }
@@ -143,7 +123,6 @@ struct Node *createPolynomial() {
     return head;
 }
 
-/* Display a polynomial */
 void displayPolynomial(struct Node *head) {
     struct Node *temp;
     int first = 1;
@@ -176,15 +155,13 @@ void displayPolynomial(struct Node *head) {
         if (temp->exp == 0) {
             printf("%lld", c);
         } else {
-            if (c != 1) {
+            if (c != 1)
                 printf("%lld", c);
-            }
 
             printf("x");
 
-            if (temp->exp != 1) {
+            if (temp->exp != 1)
                 printf("^%d", temp->exp);
-            }
         }
 
         first = 0;
@@ -193,13 +170,10 @@ void displayPolynomial(struct Node *head) {
     } while (temp != head);
 }
 
-/* Add two polynomials */
-struct Node *addPolynomial(struct Node *p1,
-                           struct Node *p2) {
+struct Node *addPolynomial(struct Node *p1, struct Node *p2) {
     struct Node *result = NULL;
     struct Node *temp;
 
-    /* Copy all terms of the first polynomial */
     if (p1 != NULL) {
         temp = p1;
 
@@ -209,7 +183,6 @@ struct Node *addPolynomial(struct Node *p1,
         } while (temp != p1);
     }
 
-    /* Add all terms of the second polynomial */
     if (p2 != NULL) {
         temp = p2;
 
@@ -222,13 +195,11 @@ struct Node *addPolynomial(struct Node *p1,
     return result;
 }
 
-/* Free the circular linked list */
 void freePolynomial(struct Node **head) {
     struct Node *current, *nextNode;
 
-    if (*head == NULL) {
+    if (*head == NULL)
         return;
-    }
 
     current = (*head)->next;
 
@@ -242,7 +213,6 @@ void freePolynomial(struct Node **head) {
     *head = NULL;
 }
 
-/* Main function */
 int main() {
     struct Node *p1 = NULL;
     struct Node *p2 = NULL;
@@ -250,7 +220,7 @@ int main() {
     int choice;
 
     do {
-        printf("\n\n===== Polynomial Operations =====\n");
+        printf("\n===== Polynomial Operations =====\n");
         printf("1. Create First Polynomial\n");
         printf("2. Create Second Polynomial\n");
         printf("3. Display Polynomials\n");
@@ -263,7 +233,7 @@ int main() {
             case 1:
                 freePolynomial(&p1);
                 p1 = createPolynomial();
-                printf("First polynomial created: ");
+                printf("First Polynomial: ");
                 displayPolynomial(p1);
                 printf("\n");
                 break;
@@ -271,7 +241,7 @@ int main() {
             case 2:
                 freePolynomial(&p2);
                 p2 = createPolynomial();
-                printf("Second polynomial created: ");
+                printf("Second Polynomial: ");
                 displayPolynomial(p2);
                 printf("\n");
                 break;
@@ -279,7 +249,6 @@ int main() {
             case 3:
                 printf("First Polynomial: ");
                 displayPolynomial(p1);
-
                 printf("\nSecond Polynomial: ");
                 displayPolynomial(p2);
                 printf("\n");
@@ -291,10 +260,8 @@ int main() {
 
                 printf("First Polynomial: ");
                 displayPolynomial(p1);
-
                 printf("\nSecond Polynomial: ");
                 displayPolynomial(p2);
-
                 printf("\nResultant Polynomial: ");
                 displayPolynomial(sum);
                 printf("\n");
