@@ -11,7 +11,6 @@ struct Student {
 
 struct Student *head = NULL;
 
-/* Add a student at the end */
 void addStudent() {
     struct Student *newNode, *temp;
 
@@ -45,7 +44,6 @@ void addStudent() {
     printf("Student added successfully.\n");
 }
 
-/* Remove a student using Registration Number */
 void removeStudent() {
     struct Student *temp = head, *prev = NULL;
     int regNo;
@@ -78,7 +76,6 @@ void removeStudent() {
     printf("Student record deleted successfully.\n");
 }
 
-/* Display all students */
 void displayList() {
     struct Student *temp = head;
 
@@ -96,7 +93,6 @@ void displayList() {
     }
 }
 
-/* Count total participants */
 void countStudents() {
     struct Student *temp = head;
     int count = 0;
@@ -109,18 +105,12 @@ void countStudents() {
     printf("Total participants: %d\n", count);
 }
 
-/* Sort students by Registration Number */
 void sortList() {
     struct Student *i, *j;
     int tempRegNo;
     char tempName[100];
 
-    if (head == NULL || head->next == NULL) {
-        printf("List sorted successfully.\n");
-        return;
-    }
-
-    for (i = head; i->next != NULL; i = i->next) {
+    for (i = head; i != NULL; i = i->next) {
         for (j = i->next; j != NULL; j = j->next) {
             if (i->regNo > j->regNo) {
                 tempRegNo = i->regNo;
@@ -134,10 +124,9 @@ void sortList() {
         }
     }
 
-    printf("Students sorted by Registration Number.\n");
+    printf("Students sorted successfully.\n");
 }
 
-/* Reverse the linked list */
 void reverseList() {
     struct Student *prev = NULL;
     struct Student *current = head;
@@ -154,7 +143,6 @@ void reverseList() {
     printf("List reversed successfully.\n");
 }
 
-/* Main function */
 int main() {
     int choice;
 
@@ -168,45 +156,36 @@ int main() {
         printf("6. Reverse List\n");
         printf("7. Exit\n");
         printf("Enter your choice: ");
-
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
                 addStudent();
                 break;
-
             case 2:
                 removeStudent();
                 break;
-
             case 3:
                 displayList();
                 break;
-
             case 4:
                 countStudents();
                 break;
-
             case 5:
                 sortList();
                 break;
-
             case 6:
                 reverseList();
                 break;
-
             case 7:
                 printf("Exiting program.\n");
                 break;
-
             default:
                 printf("Invalid choice. Try again.\n");
         }
 
     } while (choice != 7);
 
-    /* Free remaining nodes */
     while (head != NULL) {
         struct Student *temp = head;
         head = head->next;
