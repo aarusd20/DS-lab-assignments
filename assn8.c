@@ -1,71 +1,54 @@
-#include<stdio.h>
 
+#include <stdio.h>
 #define MAX 5
 
-int queue[MAX];
-int front=-1,rear=-1;
+int q[MAX], front = -1, rear = -1;
 
-void enqueue(int x){
-    if(rear==MAX-1){
+void enqueue(int x) {
+    if (rear == MAX - 1) {
         printf("Queue Overflow\n");
         return;
     }
-
-    if(front==-1)
-        front=0;
-
-    queue[++rear]=x;
+    if (front == -1) front = 0;
+    q[++rear] = x;
     printf("Job added\n");
 }
 
-void dequeue(){
-    if(front==-1 || front>rear){
+void dequeue() {
+    if (front == -1) {
         printf("Queue Underflow\n");
         return;
     }
-
-    printf("Job %d processed\n",queue[front++]);
-
-    if(front>rear)
-        front=rear=-1;
+    printf("Job %d processed\n", q[front++]);
+    if (front > rear) front = rear = -1;
 }
 
-void display(){
-    int i;
-
-    if(front==-1){
+void display() {
+    if (front == -1) {
         printf("Queue is empty\n");
         return;
     }
-
-    for(i=front;i<=rear;i++)
-        printf("%d ",queue[i]);
-
+    for (int i = front; i <= rear; i++)
+        printf("%d ", q[i]);
     printf("\n");
 }
 
-int main(){
-    int choice,x;
+int main() {
+    int ch, x;
+    while (1) {
+        printf("\n1.Enqueue  2.Dequeue  3.Display  4.Exit\n");
+        scanf("%d", &ch);
 
-    while(1){
-        printf("\n1.Enqueue\n2.Dequeue\n3.Display\n4.Exit\n");
-        printf("Enter choice: ");
-        scanf("%d",&choice);
-
-        if(choice==1){
-            printf("Enter Job ID: ");
-            scanf("%d",&x);
-            enqueue(x);
+        switch (ch) {
+            case 1:
+                printf("Enter Job ID: ");
+                scanf("%d", &x);
+                enqueue(x);
+                break;
+            case 2: dequeue(); break;
+            case 3: display(); break;
+            case 4: return 0;
+            default: printf("Invalid choice\n");
         }
-        else if(choice==2)
-            dequeue();
-        else if(choice==3)
-            display();
-        else if(choice==4)
-            break;
-        else
-            printf("Invalid choice\n");
     }
-
-    return 0;
 }
