@@ -1,196 +1,126 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct Student {
     int regNo;
-    char name[100];
+    char name[50];
     struct Student *next;
 };
 
 struct Student *head = NULL;
 
-void addStudent() {
-    struct Student *newNode, *temp;
+void add() {
+    struct Student *n = malloc(sizeof(struct Student));
+    if (n == NULL) return;
 
-    newNode = (struct Student *)malloc(sizeof(struct Student));
+    printf("Enter regNo and name: ");
+    scanf("%d %49s", &n->regNo, n->name);
+    n->next = NULL;
 
-    if (newNode == NULL) {
-        printf("Memory allocation failed.\n");
-        return;
+    if (head == NULL)
+        head = n;
+    else {
+        struct Student *t = head;
+        while (t->next != NULL)
+            t = t->next;
+        t->next = n;
     }
-
-    printf("Enter Registration Number: ");
-    scanf("%d", &newNode->regNo);
-
-    printf("Enter Student Name: ");
-    scanf(" %99[^\n]", newNode->name);
-
-    newNode->next = NULL;
-
-    if (head == NULL) {
-        head = newNode;
-    } else {
-        temp = head;
-
-        while (temp->next != NULL) {
-            temp = temp->next;
-        }
-
-        temp->next = newNode;
-    }
-
-    printf("Student added successfully.\n");
 }
 
 void removeStudent() {
-    struct Student *temp = head, *prev = NULL;
-    int regNo;
+    struct Student *t = head, *p = NULL;
+    int x;
 
-    if (head == NULL) {
-        printf("No students registered.\n");
+    printf("Enter regNo to delete: ");
+    scanf("%d", &x);
+
+    while (t != NULL && t->regNo != x) {
+        p = t;
+        t = t->next;
+    }
+
+    if (t == NULL) {
+        printf("Not found\n");
         return;
     }
 
-    printf("Enter Registration Number to remove: ");
-    scanf("%d", &regNo);
+    if (p == NULL) head = t->next;
+    else p->next = t->next;
 
-    while (temp != NULL && temp->regNo != regNo) {
-        prev = temp;
-        temp = temp->next;
-    }
-
-    if (temp == NULL) {
-        printf("Student not found.\n");
-        return;
-    }
-
-    if (prev == NULL) {
-        head = temp->next;
-    } else {
-        prev->next = temp->next;
-    }
-
-    free(temp);
-    printf("Student record deleted successfully.\n");
+    free(t);
+    printf("Deleted\n");
 }
 
-void displayList() {
-    struct Student *temp = head;
+void display() {
+    struct Student *t = head;
 
-    if (head == NULL) {
-        printf("No students registered.\n");
-        return;
-    }
-
-    printf("\n--- Registered Students ---\n");
-
-    while (temp != NULL) {
-        printf("Registration Number: %d\n", temp->regNo);
-        printf("Name: %s\n\n", temp->name);
-        temp = temp->next;
+    while (t != NULL) {
+        printf("%d %s\n", t->regNo, t->name);
+        t = t->next;
     }
 }
 
-void countStudents() {
-    struct Student *temp = head;
-    int count = 0;
+void count() {
+    int c = 0;
+    struct Student *t = head;
 
-    while (temp != NULL) {
-        count++;
-        temp = temp->next;
+    while (t != NULL) {
+        c++;
+        t = t->next;
     }
-
-    printf("Total participants: %d\n", count);
+    printf("Total students = %d\n", c);
 }
 
-void sortList() {
+void sort() {
     struct Student *i, *j;
-    int tempRegNo;
-    char tempName[100];
+    int r;
+    char name[50];
 
-    for (i = head; i != NULL; i = i->next) {
-        for (j = i->next; j != NULL; j = j->next) {
+    for (i = head; i != NULL; i = i->next)
+        for (j = i->next; j != NULL; j = j->next)
             if (i->regNo > j->regNo) {
-                tempRegNo = i->regNo;
+                r = i->regNo;
                 i->regNo = j->regNo;
-                j->regNo = tempRegNo;
+                j->regNo = r;
 
-                strcpy(tempName, i->name);
-                strcpy(i->name, j->name);
-                strcpy(j->name, tempName);
+                __builtin_strcpy(name, i->name);
+                __builtin_strcpy(i->name, j->name);
+                __builtin_strcpy(j->name, name);
             }
-        }
-    }
-
-    printf("Students sorted successfully.\n");
+    printf("Sorted\n");
 }
 
-void reverseList() {
-    struct Student *prev = NULL;
-    struct Student *current = head;
-    struct Student *nextNode;
+void reverse() {
+    struct Student *p = NULL, *c = head, *n;
 
-    while (current != NULL) {
-        nextNode = current->next;
-        current->next = prev;
-        prev = current;
-        current = nextNode;
+    while (c != NULL) {
+        n = c->next;
+        c->next = p;
+        p = c;
+        c = n;
     }
-
-    head = prev;
-    printf("List reversed successfully.\n");
+    head = p;
+    printf("Reversed\n");
 }
 
 int main() {
-    int choice;
+    int ch;
 
     do {
-        printf("\n===== Workshop Enrollment System =====\n");
-        printf("1. Add Student\n");
-        printf("2. Remove Student\n");
-        printf("3. Display Students\n");
-        printf("4. Count Participants\n");
-        printf("5. Sort Students\n");
-        printf("6. Reverse List\n");
-        printf("7. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        printf("\n1.Add 2.Remove 3.Display 4.Count");
+        printf("\n5.Sort 6.Reverse 7.Exit\n");
+        scanf("%d", &ch);
 
-        switch (choice) {
-            case 1:
-                addStudent();
-                break;
-            case 2:
-                removeStudent();
-                break;
-            case 3:
-                displayList();
-                break;
-            case 4:
-                countStudents();
-                break;
-            case 5:
-                sortList();
-                break;
-            case 6:
-                reverseList();
-                break;
-            case 7:
-                printf("Exiting program.\n");
-                break;
-            default:
-                printf("Invalid choice. Try again.\n");
+        switch (ch) {
+            case 1: add(); break;
+            case 2: removeStudent(); break;
+            case 3: display(); break;
+            case 4: count(); break;
+            case 5: sort(); break;
+            case 6: reverse(); break;
         }
-
-    } while (choice != 7);
-
-    while (head != NULL) {
-        struct Student *temp = head;
-        head = head->next;
-        free(temp);
-    }
+    } while (ch != 7);
 
     return 0;
 }
